@@ -9,4 +9,21 @@
 1. Не отвечает за аутентификацию пользователей
 2. Не хранит статистику, только отправляет события для её сбора
 
+## Диаграмма
 ```mermaid
+erDiagram
+    POSTS ||--o{ COMMENTS : "has"
+    POSTS {
+        int id
+        string title
+        string description
+        int business_id
+        datetime created_at
+    }
+    COMMENTS {
+        int id
+        string text
+        int user_id
+        int post_id
+        datetime created_at
+    }
