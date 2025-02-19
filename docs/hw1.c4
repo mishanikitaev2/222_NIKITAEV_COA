@@ -1,0 +1,143 @@
+specification {
+  element actor
+  element system
+  element component
+  element database
+}
+
+model {
+  // Система пользователей и ролей
+  user = actor 'Пользователь' {
+    description 'Пользователь приложения'
+  }
+
+  business = actor 'Менеджер промокодов' {
+    description 'Менеджер, который создает промокоды и просматривает статистику'
+  }
+
+  // Система лояльности
+  loyaltyPlatform = system 'Платформа лояльности' {
+    component apiGateway 'API Gateway' {
+      description 'Принимает запросы от UI и направляет в сервисы'
+      style {
+        shape gateway
+      }
+    }
+
+    component userService 'Сервис пользователей' {
+      description 'Отвечает за регистрацию/вход и профиль пользователя'
+      style {
+        shape component
+      }
+    }
+
+    component postService 'Сервис постов' {
+      description 'Управляет промокодами и комментариями'
+      style {
+        shape component
+      }
+    }
+
+    component statsService 'Сервис статистики' {
+      description 'Собирает статистику по просмотрам/лайкам/комментариям'
+      style {
+        shape component
+      }
+    }
+
+    // Базы данных
+    database userDb 'PostgreSQL' {
+      description 'База данных для userService'
+      style {
+        shape database
+      }
+    }
+
+    database postDb 'PostgreSQL' {
+      description 'База данных для postService'
+      style {
+        shape database
+      }
+    }
+
+    database statsDb 'ClickHouse' {
+      description 'База данных для statsService'
+      style {
+        shape database
+      }
+    }
+
+    // Взаимодействия
+    apiGateway -> userService 'HTTP'
+    apiGateway -> postService 'HTTP'
+    apiGateway -> statsService 'HTTP'
+    postService -> statsService 'Kafka'
+
+    userService -> userDb 'Read/Write'
+    postService -> postDb 'Read/Write'
+    statsService -> statsDb 'Read/Write'
+  }
+
+  // Взаимодействие акторов с системой
+  user -> apiGateway 'Просматривает промокоды, ставит лайки, комментирует'
+  business -> apiGateway 'Создает промокоды, собирает статистику'
+}
+
+views {
+  view index {
+    title 'Общая архитектура системы'
+    include *
+  }
+  view services of loyaltyPlatform {
+    title 'Сервисы и их взаимодействие'
+    include loyaltyPlatform.*
+    style * {
+      opacity 25%
+    }
+    style user, business {
+      color muted
+    }
+  }
+}
+
+// ER-диаграммы для сервисов
+erDiagram
+    USERS ||--o{ ROLES : has
+    USERS {
+        int id
+        string name
+        string email
+        string password
+        datetime created_at
+    }
+    ROLES {
+        int id
+        string name
+    }
+
+erDiagram
+    POSTS ||--o{ COMMENTS : has
+    POSTS {
+        int id
+        string title
+        string description
+        int business_id
+        datetime created_at
+    }
+    COMMENTS {
+        int id
+        string text
+        int user_id
+        int post_id
+        datetime created_at
+    }
+
+erDiagram
+    STATS {
+        int id
+        int post_id
+        int views
+        int likes
+        int comments
+        datetime updated_at
+    }
