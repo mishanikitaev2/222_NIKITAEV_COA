@@ -1,0 +1,55 @@
+syntax = "proto3";
+
+package promoservice;
+
+// Сообщение для промокода с требуемыми полями
+message Promo {
+  string id = 1;              // Идентификатор промокода
+  string title = 2;           // Название
+  string description = 3;     // Описание
+  string creatorId = 4;       // ID создателя
+  double discountSize = 5;    // Размер скидки
+  string code = 6;            // Код
+  string createdAt = 7;       // Дата создания
+  string updatedAt = 8;       // Дата обновления
+}
+
+// Сообщение для создания/обновления промокода
+message CreateUpdatePromoRequest {
+  string title = 1;
+  string description = 2;
+  string creatorId = 3;
+  double discountSize = 4;
+  string code = 5;
+}
+
+// Ответ для операций с промокодом
+message PromoResponse {
+  Promo promo = 1;
+}
+
+// Запрос для получения или удаления промокода по ID
+message GetDeletePromoRequest {
+  string id = 1;
+}
+
+// Запрос для получения списка промокодов с пагинацией
+message ListPromosRequest {
+  int32 page = 1;
+  int32 pageSize = 2;
+}
+
+// Ответ для списка промокодов
+message ListPromosResponse {
+  repeated Promo promos = 1;
+  int32 totalCount = 2;
+}
+
+// Сервис промокодов, реализующий CRUD операции
+service PromoService {
+  rpc CreatePromo(CreateUpdatePromoRequest) returns (PromoResponse);
+  rpc GetPromo(GetDeletePromoRequest) returns (PromoResponse);
+  rpc UpdatePromo(CreateUpdatePromoRequest) returns (PromoResponse);
+  rpc DeletePromo(GetDeletePromoRequest) returns (PromoResponse);
+  rpc ListPromos(ListPromosRequest) returns (ListPromosResponse);
+}
