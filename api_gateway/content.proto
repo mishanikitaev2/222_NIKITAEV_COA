@@ -1,0 +1,26 @@
+syntax = "proto3";
+package content.service;
+
+message ContentServiceRequest {
+    string id = 1;
+    string title = 2;
+    string description = 3;
+    string author_id = 4;
+    bool is_restricted = 5;
+    repeated string categories = 6;
+}
+
+message ContentServiceResponse {
+    string id = 1;
+    string title = 2;
+    string description = 3;
+    string author_id = 4;
+    bool is_restricted = 5;
+    repeated string categories = 6;
+    string created_at = 7;
+    string updated_at = 8;
+}
+
+service ContentService {
+    rpc GetContent (ContentServiceRequest) returns (ContentServiceResponse);
+}

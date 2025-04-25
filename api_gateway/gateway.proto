@@ -1,0 +1,13 @@
+syntax = "proto3";
+package api.gateway;
+
+import "content.proto";
+
+message GatewayContentRequest {
+    string content_id = 1;
+    string user_id = 2;
+}
+
+service GatewayService {
+    rpc ProcessContent (GatewayContentRequest) returns (content.service.ContentServiceResponse);
+}
