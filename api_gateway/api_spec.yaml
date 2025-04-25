@@ -1,0 +1,22 @@
+openapi: 3.0.0
+info:
+  title: Content Management API (Gateway)
+  version: "1.1"
+paths:
+  /content:
+    post:
+      summary: Create new content
+      ...
+    get:
+      summary: List content
+      ...
+  /content/{id}:
+    get:
+      summary: Get content by ID
+      ...
+    put:
+      summary: Update content
+      ...
+    delete:
+      summary: Remove content
+      ...

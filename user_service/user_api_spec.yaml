@@ -1,0 +1,20 @@
+openapi: 3.0.0
+info:
+  title: User Management API
+  version: "1.1"
+paths:
+  /users/register:
+    post:
+      summary: Register new user
+      ...
+  /users/login:
+    post:
+      summary: Authenticate user
+      ...
+  /users/profile:
+    get:
+      summary: Get user profile
+      ...
+    put:
+      summary: Update user profile
+      ...
